@@ -262,7 +262,7 @@
       // Update the original list when the user changes the full list.
       vm.$watch('full' + utils.capitalize(this.listName), function (newVal, oldVal) {
         _this.originalList = newVal;
-        _this.setNumberOfPages(_this.originalList.length);
+        _this.setNumberOfPages(_this.originalList.length, vm);
         vm['refresh' + utils.capitalize(_this.listName) + 'Page']();
       });
 
@@ -276,7 +276,7 @@
       this.list = { currentPage: 0, initial: 0, perPage: perPage };
 
       // Set links array.
-      this.setNumberOfPages(this.originalList.length);
+      this.setNumberOfPages(this.originalList.length, vm);
 
       // Set links array for limited navs (if used).
       this.setLimitedPages(limit);
@@ -317,7 +317,7 @@
     },
     update: function update(list) {
       // Refresh number of pages (useful in case you're filtering the list)
-      this.setNumberOfPages(list.length);
+      this.setNumberOfPages(list.length, this.vm);
 
       this.list.currentPage = this.list.currentPage >= this.list.numberOfPages ? this.list.numberOfPages - 1 : this.list.currentPage;
 
@@ -328,13 +328,13 @@
 
       this.set(list.slice(index, index + this.list.perPage));
     },
-    setNumberOfPages: function setNumberOfPages(length) {
+    setNumberOfPages: function setNumberOfPages(length, vm) {
       var numberOfItems = length;
       this.list.numberOfPages = Math.ceil(numberOfItems / this.list.perPage);
 
       var links = utils.generateLinksArray(1, this.list.numberOfPages);
 
-      this.vm.$set(this.listName + 'Links', links);
+      vm.$set(this.listName + 'Links', links);
     },
     setCurrentPage: function setCurrentPage() {
       exports.Vue.config.silent = true;
